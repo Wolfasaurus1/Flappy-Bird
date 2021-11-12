@@ -16,8 +16,11 @@ class Game : public App
 public:
 
 	SpriteRenderer *renderer;
-	const static int numObjects = 21; // 1 player, 10 pipes, 10 gaps
+	const static int numObjects = 20; // 1 player, 10 pipes, 10 gaps
 	GameObject objects[numObjects];
+	float bird_y = 600.0f;
+	float bird_vy = 0.0f;
+	float bird_ay = -4000.0f;
 
 	void Init()
 	{
@@ -28,10 +31,6 @@ public:
 		float pipeSpacing = 300.0f;
 		float pipeShift = 1000.0f;
 
-		objects[20].position = glm::vec2(1000.0f, 600.0f);
-		objects[20].size = glm::vec2(100.0f, 100.0f);
-		objects[20].velocity = glm::vec2(0.0f, 0.0f);
-		objects[20].color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 		for (int i = 0; i < 10; i++) {
 			objects[i].position = glm::vec2(1000.0f + pipeSpacing * i, 600.0f);
@@ -56,6 +55,10 @@ public:
 	{
 		for (GameObject& obj : objects)
 			obj.position.x += obj.velocity.x;
+
+		//apply gravity to the bird
+		bird_y += (bird_vy * dt) + (bird_ay * dt * dt * 0.5f);
+		bird_vy += bird_ay * dt;
 	}
 
 	bool IsCollision(GameObject entity1, GameObject entity2, float dt)
@@ -77,11 +80,18 @@ public:
 	{
 		for (GameObject& obj : objects)
 			renderer->DrawSprite(obj.position, obj.size, 0.0f, obj.color); 
+
+		renderer->DrawSprite(glm::vec2(1000.0f, bird_y), glm::vec2(100.0f, 100.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	void ProcessInput()
 	{
-		
+		int SPACE_state = glfwGetKey(this->window, GLFW_KEY_SPACE);
+
+		if (SPACE_state == GLFW_PRESS)
+		{
+			bird_vy = 750.0f;
+		}
 	}
 
 private:
