@@ -49,6 +49,7 @@ public:
 			objects[i].velocity = glm::vec2(-10.0f, 0.0f);
 			objects[i].color = glm::vec3(0.0f, 0.0f, 0.0f);
 		}
+		//making a change
 	}
 
 	void Update(float dt)
