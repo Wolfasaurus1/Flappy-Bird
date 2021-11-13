@@ -27,15 +27,13 @@ public:
 		ResourceManager::LoadShader("shaders/shader.vs", "shaders/shader.fs", "general_rectangle");
 		renderer = new SpriteRenderer(ResourceManager::GetShader("general_rectangle"));
 
-		//
 		float pipeSpacing = 300.0f;
-		float pipeShift = 1000.0f;
-
+		float pipeShift = 2000.0f;
 
 		for (int i = 0; i < 10; i++) {
-			objects[i].position = glm::vec2(1000.0f + pipeSpacing * i, 600.0f);
+			objects[i].position = glm::vec2(pipeShift + pipeSpacing * i, 600.0f);
 			objects[i].size = glm::vec2(50.0f, 1200.0f);
-			objects[i].velocity = glm::vec2(-10.0f, 0.0f);
+			objects[i].velocity = glm::vec2(-200.0f, 0.0f);
 			objects[i].color = glm::vec3(1.0f, 1.0f, 1.0f);
 		}
 
@@ -43,37 +41,40 @@ public:
 		srand((unsigned)time(NULL));
 		for (int i = 10; i < 20; i++)
 		{
-			objects[i].position = glm::vec2(1000.0f + pipeSpacing * (i - 10), (rand() % 500) + 350);
-			objects[i].size = glm::vec2(100.0f, 300.0f);
-			objects[i].velocity = glm::vec2(-10.0f, 0.0f);
+			objects[i].position = glm::vec2(pipeShift + pipeSpacing * (i - 10), (rand() % 500) + 350);
+			objects[i].size = glm::vec2(50.0f, 300.0f);
+			objects[i].velocity = glm::vec2(-200.0f, 0.0f);
 			objects[i].color = glm::vec3(0.0f, 0.0f, 0.0f);
 		}
-		//making a change
+	}
+
+	void ResetLevel()
+	{
+		float pipeSpacing = 300.0f;
+		float pipeShift = 2000.0f;
+
+		for (int i = 0; i < 10; i++)
+			objects[i].position.x = pipeShift + pipeSpacing * i;
+
+		for (int i = 10; i < 20; i++)
+			objects[i].position.x = pipeShift + pipeSpacing * (i - 10);
 	}
 
 	void Update(float dt)
 	{
 		for (GameObject& obj : objects)
-			obj.position.x += obj.velocity.x;
+			obj.position.x += obj.velocity.x * dt;
 
-		//apply gravity to the bird
 		bird_y += (bird_vy * dt) + (bird_ay * dt * dt * 0.5f);
 		bird_vy += bird_ay * dt;
-	}
 
-	bool IsCollision(GameObject entity1, GameObject entity2, float dt)
-	{
-		float averageXLength = abs(entity1.size.x - entity2.size.x);
-		float averageYLength = abs(entity1.size.y - entity2.size.y);
-
-		glm::vec2 ds = glm::abs((entity1.position + entity1.velocity * dt) - (entity2.position + entity2.velocity * dt));
-
-		if (ds.y < averageYLength && ds.x < averageXLength)
+		for (int i = 10; i < 20; i++)
 		{
-			return true;
-		}
+			float averageSizeX = (100.0f + 50.0f) / 2;
 
-		return false;
+			if (abs(objects[i].position.x - 1000.0f) < averageSizeX && abs(objects[i].position.y - bird_y) > 100.0f)
+				ResetLevel();
+		}
 	}
 
 	void Render()
@@ -86,13 +87,16 @@ public:
 
 	void ProcessInput()
 	{
-		int SPACE_state = glfwGetKey(this->window, GLFW_KEY_SPACE);
+		int new_SPACE_state = glfwGetKey(this->window, GLFW_KEY_SPACE);
 
-		if (SPACE_state == GLFW_PRESS)
+		if (new_SPACE_state == GLFW_PRESS && old_SPACE_state != GLFW_PRESS)
 		{
-			bird_vy = 750.0f;
+			bird_vy = 900.0f;
 		}
+
+		old_SPACE_state = new_SPACE_state;
 	}
 
 private:
+	int old_SPACE_state = 0;
 };
