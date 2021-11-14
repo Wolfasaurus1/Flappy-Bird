@@ -120,6 +120,7 @@
     <ClCompile Include="Bird.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NeuralNet.cpp" />
     <ClCompile Include="PipeSystem.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="Bird.h" />
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="NeuralNet.h" />
     <ClInclude Include="PipeSystem.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />

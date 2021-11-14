@@ -16,6 +16,7 @@ public:
 
 	Bird bird;
 	PipeSystem pipeSystem;
+	glm::vec2 targetCoord;
 
 	void Init()
 	{
@@ -27,6 +28,7 @@ public:
 		bird.vy = 0.0f;
 		bird.ay = -4000.0f;
 
+		srand(time(NULL));
 		pipeSystem.Init();
 	}
 
@@ -42,8 +44,14 @@ public:
 		pipeSystem.Update(dt);
 		bird.Update(dt);
 
+		//number of pipes passed can easily be calculated
+		int pipeIndex = fmaxf(floor((925.0f - pipeSystem.pipes[0].x) / 350.0f), -1.0f) + 1;
+
+		if(pipeIndex < 25)
+			targetCoord = glm::vec2(pipeSystem.pipes[pipeIndex].x, pipeSystem.pipes[pipeIndex].gapy);
+		
 		//do collision detection to make sure bird doesn't collide with pipes
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 25; i++)
 		{
 			float averageSizeX = (100.0f + 50.0f) / 2;
 
@@ -60,6 +68,7 @@ public:
 		}
 		
 		renderer->DrawSprite(glm::vec2(1000.0f, bird.y), glm::vec2(100.0f, 100.0f), 0.0f, glm::vec3(1.0f, 0.5f, 0.1f));
+		renderer->DrawSprite(targetCoord, glm::vec2(20.0f, 20.0f));
 	}
 
 	void ProcessInput()

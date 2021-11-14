@@ -25,7 +25,7 @@ public:
 
 	void Init()
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 25; i++)
 			pipes.push_back(Pipe(1500.0f + (i * pipeSpacing), (rand() % 500) + 350));
 	}
 
