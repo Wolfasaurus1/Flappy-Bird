@@ -27,7 +27,7 @@ public:
 
 		srand(time(NULL));
 
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 40; i++)
 			birds.push_back({ 600.0f, 0.0f, -4000.0f });
 
 		pipeSystem.Init();
@@ -48,6 +48,39 @@ public:
 	{
 		pipeSystem.Reset();
 
+		auto RankedBirds = RankBirds();
+
+		Bird best = birds[RankedBirds[0]];
+		Bird secondBest = birds[RankedBirds[1]];
+
+		auto crossover12 = UniformCrossover(best.brain, secondBest.brain);
+
+		birds[RankedBirds[2]].brain = crossover12.first;
+		birds[RankedBirds[3]].brain = crossover12.second;
+
+		birds[RankedBirds[4]].brain = best.brain.MutateBiases();
+		birds[RankedBirds[5]].brain = best.brain.MutateBiases();
+
+		birds[RankedBirds[6]].brain = secondBest.brain.MutateBiases();
+		birds[RankedBirds[7]].brain = secondBest.brain.MutateBiases();
+
+		birds[RankedBirds[8]].brain.GenerateRandomBrain();
+		birds[RankedBirds[9]].brain.GenerateRandomBrain();
+
+		birds[RankedBirds[10]].brain = best.brain.MutateWeights();
+		birds[RankedBirds[11]].brain = best.brain.MutateWeights();
+
+		birds[RankedBirds[12]].brain = secondBest.brain.MutateWeights();
+		birds[RankedBirds[13]].brain = secondBest.brain.MutateWeights();
+
+		birds[RankedBirds[14]].brain.GenerateRandomBrain();
+
+		for (int i = 15; i < 30; i++)
+			birds[RankedBirds[i]].brain = best.brain.MutateBiases();
+
+		for (int i = 30; i < 40; i++)
+			birds[RankedBirds[i]].brain.GenerateRandomBrain();
+
 		for (auto& bird : birds)
 			bird.Reset();
 	}
@@ -56,11 +89,13 @@ public:
 	{
 		pipeSystem.Update(dt);
 
-		//number of pipes passed can easily be calculated
+		//calculates the index of the closest pipe that we need to get through
 		int pipeIndex = fmaxf(floor((925.0f - pipeSystem.pipes[0].x) / 350.0f), -1.0f) + 1;
 
-		if(pipeIndex < 25)
+		if (pipeIndex < 24)
 			targetCoord = glm::vec2(pipeSystem.pipes[pipeIndex].x, pipeSystem.pipes[pipeIndex].gapy);
+		else
+			ResetLevel();
 
 		int BirdsAliveCount = 0;
 		for (Bird& bird : birds) 

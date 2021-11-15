@@ -36,7 +36,6 @@ public:
 		vy = 0.0f;
 		IsDead = false;
 		fitness = -1000.0f;
-		brain.GenerateRandomBrain();
 	}
 
 	float y;

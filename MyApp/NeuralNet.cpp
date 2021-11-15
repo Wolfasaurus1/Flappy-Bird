@@ -24,19 +24,29 @@ float NeuralNet::Think(float input1, float input2)
 }
 
 
-void NeuralNet::MutateWeights()
+NeuralNet NeuralNet::MutateWeights()
 {
-	w1(rand() % 3, rand() % 2) = RandomFloat(-2.0f, 2.0f);
-	//w2(rand() % 3, 0) = RandomFloat(-2.0f, 2.0f);
+	NeuralNet net;
+	net = *this;
+	
+	net.w1(rand() % 3, rand() % 2) = RandomFloat(-2.0f, 2.0f);
+	net.w2(0, rand() % 3) = RandomFloat(-2.0f, 2.0f);
+
+	return net;
 }
 
 
-void NeuralNet::MutateBiases()
+NeuralNet NeuralNet::MutateBiases()
 {
-	b1(rand() % 3) = RandomFloat(-2.0f, 2.0f);
+	NeuralNet net;
+	net = *this;
+
+	net.b1(rand() % 3) = RandomFloat(-2.0f, 2.0f);
 
 	if (rand() % 4 == 3)
-		b2(0) = RandomFloat(-2.0f, 2.0f);
+		net.b2(0) = RandomFloat(-2.0f, 2.0f);
+
+	return net;
 }
 
 

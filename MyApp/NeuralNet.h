@@ -8,8 +8,8 @@ public:
 
 	void GenerateRandomBrain();
 	float Think(float input1, float input2);
-	void MutateWeights();
-	void MutateBiases();
+	NeuralNet MutateWeights();
+	NeuralNet MutateBiases();
 
 	//weights
 	Eigen::Matrix<float, 3, 2> w1;
