@@ -21,7 +21,6 @@ public:
 		vy += ay * dt;
 
 		float output = brain.Think(brain_inputs.x, brain_inputs.y);
-		std::cout << output << std::endl;
 
 		if (output > 0.5f) {
 			WillFlap = true;
@@ -31,10 +30,21 @@ public:
 		}
 	}
 
+	void Reset()
+	{
+		y = 600.0f;
+		vy = 0.0f;
+		IsDead = false;
+		fitness = -1000.0f;
+		brain.GenerateRandomBrain();
+	}
+
 	float y;
 	float vy;
 	float ay;
 	NeuralNet brain;
 	bool WillFlap = false;
+	bool IsDead = false;
+	float fitness = -1000.0f;
 };
 

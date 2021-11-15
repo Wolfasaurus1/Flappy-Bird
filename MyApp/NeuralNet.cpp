@@ -1,4 +1,5 @@
 #include "NeuralNet.h"
+#include <vector>
 
 using namespace Eigen;
 
@@ -26,7 +27,7 @@ float NeuralNet::Think(float input1, float input2)
 void NeuralNet::MutateWeights()
 {
 	w1(rand() % 3, rand() % 2) = RandomFloat(-2.0f, 2.0f);
-	w2(rand() % 3, 0) = RandomFloat(-2.0f, 2.0f);
+	//w2(rand() % 3, 0) = RandomFloat(-2.0f, 2.0f);
 }
 
 
@@ -39,7 +40,7 @@ void NeuralNet::MutateBiases()
 }
 
 
-void UniformCrossover(NeuralNet& net1, NeuralNet& net2)
+std::pair<NeuralNet, NeuralNet> UniformCrossover(NeuralNet net1, NeuralNet net2)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -57,6 +58,8 @@ void UniformCrossover(NeuralNet& net1, NeuralNet& net2)
 		net1.b2(0) = net2.b2(0);
 		net2.b2(0) = tmp;
 	}
+
+	return std::make_pair(net1, net2);
 }
 
 

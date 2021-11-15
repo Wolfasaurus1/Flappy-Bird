@@ -20,6 +20,6 @@ public:
 	Eigen::Vector<float, 1> b2;
 };
 
-void UniformCrossover(NeuralNet& net1, NeuralNet& net2);
+std::pair<NeuralNet, NeuralNet> UniformCrossover(NeuralNet net1, NeuralNet net2);
 float RandomFloat(float a, float b);
 float Sigmoid(float z);
