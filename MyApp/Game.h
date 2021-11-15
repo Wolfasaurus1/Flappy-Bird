@@ -27,7 +27,7 @@ public:
 
 		srand(time(NULL));
 
-		for(int i = 0; i < 40; i++)
+		for(int i = 0; i < 50; i++)
 			birds.push_back({ 600.0f, 0.0f, -4000.0f });
 
 		pipeSystem.Init();
@@ -51,34 +51,14 @@ public:
 		auto RankedBirds = RankBirds();
 
 		Bird best = birds[RankedBirds[0]];
-		Bird secondBest = birds[RankedBirds[1]];
 
-		auto crossover12 = UniformCrossover(best.brain, secondBest.brain);
-
-		birds[RankedBirds[2]].brain = crossover12.first;
-		birds[RankedBirds[3]].brain = crossover12.second;
-
-		birds[RankedBirds[4]].brain = best.brain.MutateBiases();
-		birds[RankedBirds[5]].brain = best.brain.MutateBiases();
-
-		birds[RankedBirds[6]].brain = secondBest.brain.MutateBiases();
-		birds[RankedBirds[7]].brain = secondBest.brain.MutateBiases();
-
-		birds[RankedBirds[8]].brain.GenerateRandomBrain();
-		birds[RankedBirds[9]].brain.GenerateRandomBrain();
-
-		birds[RankedBirds[10]].brain = best.brain.MutateWeights();
-		birds[RankedBirds[11]].brain = best.brain.MutateWeights();
-
-		birds[RankedBirds[12]].brain = secondBest.brain.MutateWeights();
-		birds[RankedBirds[13]].brain = secondBest.brain.MutateWeights();
-
-		birds[RankedBirds[14]].brain.GenerateRandomBrain();
-
-		for (int i = 15; i < 30; i++)
+		for(int i = 2; i < 21; i++)
 			birds[RankedBirds[i]].brain = best.brain.MutateBiases();
 
-		for (int i = 30; i < 40; i++)
+		for(int i = 22; i < 40; i++)
+			birds[RankedBirds[i]].brain = best.brain.MutateWeights();
+
+		for (int i = 40; i < 50; i++)
 			birds[RankedBirds[i]].brain.GenerateRandomBrain();
 
 		for (auto& bird : birds)
