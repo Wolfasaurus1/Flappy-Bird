@@ -27,7 +27,7 @@ public:
 
 		srand(time(NULL));
 
-		for(int i = 0; i < 50; i++)
+		for(int i = 0; i < 60; i++)
 			birds.push_back({ 600.0f, 0.0f, -4000.0f });
 
 		pipeSystem.Init();
@@ -38,8 +38,7 @@ public:
 		std::vector<size_t> idx(birds.size());
 		std::iota(idx.begin(), idx.end(), 0);
 
-		stable_sort(idx.begin(), idx.end(),
-			[this](size_t i1, size_t i2) {return birds[i1].fitness > birds[i2].fitness; });
+		stable_sort(idx.begin(), idx.end(),[this](size_t i1, size_t i2) {return birds[i1].fitness > birds[i2].fitness; });
 
 		return idx;
 	}
@@ -58,7 +57,7 @@ public:
 		for(int i = 22; i < 40; i++)
 			birds[RankedBirds[i]].brain = best.brain.MutateWeights();
 
-		for (int i = 40; i < 50; i++)
+		for (int i = 40; i < 60; i++)
 			birds[RankedBirds[i]].brain.GenerateRandomBrain();
 
 		for (auto& bird : birds)
@@ -72,10 +71,15 @@ public:
 		//calculates the index of the closest pipe that we need to get through
 		int pipeIndex = fmaxf(floor((925.0f - pipeSystem.pipes[0].x) / 350.0f), -1.0f) + 1;
 
-		if (pipeIndex < 24)
+		if (pipeIndex < 25) {
 			targetCoord = glm::vec2(pipeSystem.pipes[pipeIndex].x, pipeSystem.pipes[pipeIndex].gapy);
-		else
-			ResetLevel();
+		}
+		else {
+			for (Bird& bird : birds)
+				if (!bird.IsDead)
+					bird.fitness = 1000.0f - pipeSystem.pipes[0].x;
+			ResetLevel(); 
+		}
 
 		int BirdsAliveCount = 0;
 		for (Bird& bird : birds) 
@@ -120,7 +124,7 @@ public:
 		for (Bird& bird : birds) {
 			if (bird.WillFlap)
 			{
-				bird.vy = 900.0f;
+				bird.vy = 600.0f;
 				bird.WillFlap = false;
 			}
 /*
