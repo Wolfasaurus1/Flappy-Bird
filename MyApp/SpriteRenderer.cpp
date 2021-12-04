@@ -4,6 +4,10 @@ SpriteRenderer::SpriteRenderer(Shader &shader)
 {
 	this->shader = shader;
 	this->initRenderData();
+
+	this->shader.Use();
+	glm::mat4 projection = glm::ortho<float>(0.0f, 2000.0f, 0.0f, 1200.0f, -1.f, 1.f);
+	this->shader.setMat4("projection", projection);
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -18,20 +22,16 @@ void SpriteRenderer::DrawSprite(glm::vec2 position, glm::vec2 size, float rotate
 
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 projection = glm::ortho<float>(0.0f, 2000.0f, 0.0f, 1200.0f, -1.f, 1.f);
 
-	model = glm::translate(model, glm::vec3(position, 0.0f));
-
-	model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+	model = glm::translate(model, glm::vec3(position, 0.0f) + glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+	//model = glm::translate(model, glm::vec3(position, 0.0f));
+	//model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+	//model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
 	model = glm::scale(model, glm::vec3(size, 1.0f));
 
 	this->shader.setMat4("model", model);
 	this->shader.setVec3("spriteColor", color);
-
-	this->shader.setMat4("model", model);
-	this->shader.setMat4("projection", projection);
 
 	glBindVertexArray(this->quadVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

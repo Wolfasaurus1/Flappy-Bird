@@ -27,7 +27,7 @@ public:
 
 		srand(time(NULL));
 
-		for(int i = 0; i < 60; i++)
+		for(int i = 0; i < 10; i++)
 			birds.push_back({ 600.0f, 0.0f, -4000.0f });
 
 		pipeSystem.Init();
@@ -51,14 +51,14 @@ public:
 
 		Bird best = birds[RankedBirds[0]];
 
-		for(int i = 2; i < 21; i++)
+		for(int i = 2; i < 10; i++)
 			birds[RankedBirds[i]].brain = best.brain.MutateBiases();
 
-		for(int i = 22; i < 40; i++)
-			birds[RankedBirds[i]].brain = best.brain.MutateWeights();
+		//for(int i = 22; i < 40; i++)
+		//	birds[RankedBirds[i]].brain = best.brain.MutateWeights();
 
-		for (int i = 40; i < 60; i++)
-			birds[RankedBirds[i]].brain.GenerateRandomBrain();
+		//for (int i = 40; i < 500; i++)
+		//	birds[RankedBirds[i]].brain.GenerateRandomBrain();
 
 		for (auto& bird : birds)
 			bird.Reset();
@@ -74,7 +74,8 @@ public:
 		if (pipeIndex < 25) {
 			targetCoord = glm::vec2(pipeSystem.pipes[pipeIndex].x, pipeSystem.pipes[pipeIndex].gapy);
 		}
-		else {
+		else 
+		{
 			for (Bird& bird : birds)
 				if (!bird.IsDead)
 					bird.fitness = 1000.0f - pipeSystem.pipes[0].x;
@@ -84,20 +85,19 @@ public:
 		int BirdsAliveCount = 0;
 		for (Bird& bird : birds) 
 		{
-			if (!bird.IsDead) 
-			{
-				bird.Update(dt, (targetCoord - glm::vec2(1000.0f, bird.y)) / 300.0f);
-				float averageSizeX = (100.0f + 50.0f) / 2;
+			if (bird.IsDead) continue;
 
-				if (abs(pipeSystem.pipes[pipeIndex].x - 1000.0f) < averageSizeX && abs(pipeSystem.pipes[pipeIndex].gapy - bird.y) > 100.0f || !(bird.y > 0.0f)) 
-				{
-					bird.IsDead = true;
-					bird.fitness = 1000.0f - pipeSystem.pipes[0].x; //then we can sort them based on fitness when all of them die
-				}
-				else 
-				{
-					BirdsAliveCount++;
-				}
+			bird.Update(dt, (targetCoord - glm::vec2(1000.0f, bird.y)) / 300.0f);
+			float averageSizeX = (100.0f + 50.0f) / 2;
+
+			if (abs(pipeSystem.pipes[pipeIndex].x - 1000.0f) < averageSizeX && abs(pipeSystem.pipes[pipeIndex].gapy - bird.y) > 100.0f || !(bird.y > 0.0f)) 
+			{
+				bird.IsDead = true;
+				bird.fitness = 1000.0f - pipeSystem.pipes[0].x; //then we can sort them based on fitness when all of them die
+			}
+			else 
+			{
+				BirdsAliveCount++;
 			}
 		}
 
@@ -107,12 +107,16 @@ public:
 
 	void Render()
 	{
-		for (Pipe& pipe : pipeSystem.pipes) {
-			renderer->DrawSprite(glm::vec2(pipe.x, 600.0f), glm::vec2(50.0f, 1200.0f));
-			renderer->DrawSprite(glm::vec2(pipe.x, pipe.gapy), glm::vec2(50.0f, 300.0f), 0.0f, glm::vec3(0.0f));
+		for (Pipe &pipe : pipeSystem.pipes) 
+		{
+			if (pipe.x < 2025.0f && pipe.x > -25.0f) 
+			{
+				renderer->DrawSprite(glm::vec2(pipe.x, 600.0f), glm::vec2(50.0f, 1200.0f));
+				renderer->DrawSprite(glm::vec2(pipe.x, pipe.gapy), glm::vec2(50.0f, 300.0f), 0.0f, glm::vec3(0.0f));
+			}
 		}
 		
-		for(Bird& bird: birds)
+		for(Bird &bird: birds)
 			if(!bird.IsDead)
 				renderer->DrawSprite(glm::vec2(1000.0f, bird.y), glm::vec2(100.0f, 100.0f), 0.0f, glm::vec3(1.0f, 0.5f, 0.1f));
 		
@@ -121,7 +125,8 @@ public:
 
 	void ProcessInput()
 	{
-		for (Bird& bird : birds) {
+		for (Bird& bird : birds) 
+		{
 			if (bird.WillFlap)
 			{
 				bird.vy = 600.0f;
